@@ -1,1 +1,27 @@
-% Not yet implemented.
+\mode<presentation>
+
+
+\RequirePackage{tikz}
+\RequirePackage{fontspec}
+\RequirePackage{environ}
+\RequirePackage{graphicx}
+
+\usetikzlibrary{calc, positioning}
+
+\if\tikz@library@external@loaded
+\else
+    \newcommand{\tikzexternaldisable}[1]{#1} % This command does nothing
+\fi
+\usecolortheme{lunde} % beamercolorthemelunde.sty
+\useinnertheme{lunde} % beamerinnerthemelunde.sty
+\useoutertheme{lunde} % beamerouterthemelunde.sty
+\usefonttheme{lunde} %  beamerfontthemelunde.sty
+
+\setmainfont{Adobe Garamond Pro}
+\setsansfont{Frutiger LT Std 45 Light}
+
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{blocks}[rounded][shadow=true]
+
+\mode<all>

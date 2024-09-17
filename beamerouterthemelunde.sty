@@ -1,0 +1,76 @@
+% beamerthemeLund.sty
+
+%\useoutertheme{default}
+
+\defbeamertemplate*{footline}{lunde}{
+    \tikzexternaldisable{
+        \begin{tikzpicture}
+            \useasboundingbox (0,-1em) rectangle (\the\paperwidth, 1em);
+            \node[fg!50!bg, rectangle, inner sep=0, anchor=east] (text) at (\the\paperwidth, 0) {\hspace{1em}\insertauthor{}\hspace{2em}\insertdate{}\hspace*{1em}\texorpdfstring{\protect\makebox[2em]{\insertframenumber}}{\insertframenumber}\hspace*{1em}};
+            \fill[color=lu-baby] (0, -1em) -- (text.south west |- 0,-1em) -- +(135:3em) -- (0, 0.4em) -- cycle;
+        \end{tikzpicture}
+    }
+}
+
+\defbeamertemplate*{frametitle}{lunde}{%
+    \usebeamerfont{frametitle}%
+    \vspace*{-0.1em}
+    \hspace*{-2.2em}% I don't understand why I need this
+    \tikzexternaldisable{
+        \begin{tikzpicture}[remember picture]
+            \useasboundingbox (0em,-1em) rectangle (\the\paperwidth+1em, 1em);
+            \fill[color=lu-green,draw=lu-green] (0em, -0.8em) -- (\the\paperwidth-1em, -1em) -- (\the\paperwidth+0.4em, 0em) |- (0, 1.2em) -- cycle;
+            \node[color=fg, anchor=west] at (0, 0) {\insertframetitle};
+        \end{tikzpicture}
+    }
+}
+
+\defbeamertemplate*{headline}{lunde}{}
+
+\newenvironment{fillframe}[1][lu-green]{
+    \begingroup
+    \setbeamercolor{normal text}{fg=white}
+    \setbeamerfont{normal text}{family=\sffamily, size=\Huge}
+    \usebeamerfont{normal text}
+    \usebeamercolor[fg]{normal text}
+    \begin{frame}[plain]
+        \tikzexternaldisable{
+            \begin{tikzpicture}[overlay, remember picture]
+                \useasboundingbox (current page.south west) rectangle (current page.north east);
+                \def\marg{0.2cm}
+                \fill[color=#1] ($(current page.south west) + (\marg, \marg)$) -- ($(current page.south east) + (-\marg/2, \marg/2)$) -- ($(current page.north east) + (-\marg, -\marg)$) -- ($(current page.north west) + (\marg/2, -\marg/2)$) -- cycle;
+            \end{tikzpicture}
+        }
+        \centering
+        \setbeamercolor{normal text}{fg=white}
+        \setbeamerfont{normal text}{series=\mdseries, size=\Large}
+}{\end{frame}\endgroup}
+
+\NewEnviron{fulltikzpicture}[1][]{
+    \tikzexternaldisable{
+        \begin{tikzpicture}[overlay, remember picture, #1]
+            \useasboundingbox (current page.south west) rectangle (current page.north east);
+            \begin{scope}[shift={
+                    ($(current page.south west)!0.5!(current page.north east)$)
+                }]
+                \BODY
+            \end{scope}
+        \end{tikzpicture}
+    }
+}
+\NewEnviron{tikzframe}[1][]{
+    \begin{frame}[plain]
+        \begin{fulltikzpicture}
+            \BODY
+        \end{fulltikzpicture}
+    \end{frame}
+
+}
+
+\newcommand{\finalframefile}{logotype}
+\newcommand{\finalframe}[1][lu-gray]{
+    \begin{fillframe}[#1]
+        \centering
+        \includegraphics[width=\textwidth, height=\textheight, keepaspectratio=true]{\finalframefile}
+    \end{fillframe}
+}

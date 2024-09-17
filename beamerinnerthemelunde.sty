@@ -1,0 +1,156 @@
+% beamerthemeLund.sty
+\useinnertheme{default}
+
+%\defbeamertemplate*{title}{lunde}[1][]{%
+%    \begin{beamercolorbox}[sep=8pt,right,#1]{title}
+%        \usebeamerfont{title}\inserttitle\par%
+%        \ifx\insertsubtitle\@empty%
+%        \else%
+%            \vskip0.25em%
+%            {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}%
+%        \fi%
+%    \end{beamercolorbox}%
+%}
+
+\defbeamertemplate*{title page}{lunde}[1][]{%
+    \begin{tikzpicture}[overlay, remember picture, node distance=0.3cm]
+        \useasboundingbox (current page.south west) rectangle (current page.north east);
+        \def\marg{0.2cm}
+        \fill[lu-pink] ($(current page.south west) + (\marg,\marg)$) -| ($(current page.north east) + (-\marg, -\marg)$) -- ($(current page.north west) + (1cm, -\marg/2)$) -- ($(current page.north west) + (\marg/2, -1cm)$) -- cycle;
+        \fill[white, opacity=0.4] ($(current page.south west) + (6cm, 0cm)$) arc (210:135:8cm) arc (135:270:6cm) -- cycle;
+        \fill[white, opacity=0.4] ($(current page.south west) + (5cm, 0cm)$) arc (205:135:8cm) arc (135:270:7cm) -- cycle;
+        \node[anchor=south west, inner sep=0pt] at ($(current page.south west) + (\marg,\marg)$) {\includegraphics[width=8cm]{Fysicum}};
+        \node[fill=white, text=lu-brown, rectangle, text width=6cm, anchor=east, draw=white]  at ($(current page.20) + (-\marg, 0)$) (title) {\usebeamerfont{title}\raggedleft\inserttitle\\};
+        \ifx\insertsubtitle\@empty%
+            \coordinate (subtitle) at (title.south east);
+        \else%
+            \node[fill=white, text=lu-brown, rectangle, anchor=east, draw=white] (subtitle) [below=of title.south east, anchor=north east] {\usebeamerfont{subtitle}\insertsubtitle};
+        \fi
+        \ifx\insertauthor\@empty%
+            \coordinate (author) at (subtitle.south east);
+        \else
+            \node[fill=white, text=lu-brown, rectangle, anchor=east, draw=white] (author) [below=of subtitle.south east, anchor=north east] {\usebeamerfont{author}\insertauthor};
+        \fi
+        \ifx\insertdate\@empty%
+        \else
+            \node[fill=white, text=lu-brown, rectangle, anchor=east, draw=white] (date) [below=of author.south east, anchor=north east] {\usebeamerfont{date}\insertdate};
+        \fi
+        \node[anchor=south east, inner sep=0] at (current page.south east) {
+                \includegraphics[width=7cm,trim={0cm 4.4cm 6.6cm 0cm}]{logotype}
+            };
+    \end{tikzpicture}%
+    %\begingroup
+    %\raggedleft
+    %\usebeamertemplate{title}
+    %\vskip1em
+    %\usebeamertemplate{author}
+    %\usebeamertemplate{institute}
+    %\usebeamertemplate{date}
+    %\endgroup
+}
+
+\def\beamer@sectionintoc#1#2#3#4#5{%
+  \ifnum\c@tocdepth>0%
+  \ifnum#4=\beamer@showpartnumber%
+  {
+  \beamer@saveanother%
+  \gdef\beamer@todo{}%
+  \beamer@slideinframe=#1\relax%
+  \expandafter\only\beamer@tocsections{\gdef\beamer@todo{%
+      \beamer@tempcount=#5\relax%
+      \advance\beamer@tempcount by\beamer@sectionadjust%
+      \ifnum\beamer@tempcount>0
+        \ifnum\beamer@tempcount>\beamer@toclastsection
+          \def\inserttocsectionnumber{}%
+        \else
+          \edef\inserttocsectionnumber{\the\beamer@tempcount}%
+        \fi
+      \else
+        \def\inserttocsectionnumber{}%
+      \fi%
+      \def\inserttocsection{\hyperlink{Navigation#3}{#2}}%
+      \def\inserttocsectionframenumber{\hyperlink{Navigation#3}{#3}}
+      \beamer@tocifnothide{\ifnum\c@section=#1\beamer@toc@cs\else\beamer@toc@os\fi}%
+      {%
+        \ifbeamer@pausesections\pause\fi%
+        \ifx\beamer@toc@ooss\beamer@hidetext
+          \vskip1.5em
+        \else
+          \vskip1em
+        \fi
+        {%
+          %\hbox{\vbox{%
+              \def\beamer@breakhere{\\}%
+              \beamer@tocact{\ifnum\c@section=#1\beamer@toc@cs\else\beamer@toc@os\fi}{section in toc}%}}%
+         %\par%
+        }%
+      }%
+    }%
+  }%
+  \beamer@restoreanother%
+  }
+  \beamer@todo%
+  \fi\fi%
+}
+
+\def\seclean{1}
+\def\secangle{2}
+\def\sectionlabellength{3cm}
+\def\subsectionlabellength{2.5cm}
+\defbeamertemplate*{section in toc}{lunde}{
+    \tikz{
+        \path
+        (0,-1.5em) +(\secangle*\seclean:-\sectionlabellength) coordinate (a)
+        (0,-1.5em) +(\secangle*\seclean:\sectionlabellength) coordinate (b)
+        (0,1.5em) +(-\secangle*\seclean:\sectionlabellength) coordinate (c)
+        (0,1.5em) +(-\secangle*\seclean:-\sectionlabellength) coordinate (d)
+        ;
+        \useasboundingbox (a) rectangle (d -| b);
+        \fill[lu-green] (a) -- (b) -- (c) -- (d) -- cycle;
+        \node[black, anchor=west] at ($(a)!.5!(d)$) {\inserttocsection};
+        \node[black, anchor=east, font=\small] at ($(b)!.5!(c)$) {\inserttocsectionframenumber};
+    }
+    \pgfmathparse{-1*\seclean}\xdef\seclean{\pgfmathresult}
+}
+
+\long\def\beamer@subsectionintoc#1#2#3#4#5#6{%
+  \ifnum\c@tocdepth>1%
+  \ifnum#5=\beamer@showpartnumber%
+  {%
+    \beamer@saveanother%
+    \gdef\beamer@todo{}%
+    \beamer@slideinframe=#1\relax%
+    \expandafter\only\beamer@tocsections{\gdef\beamer@todo{%
+      \ifbeamer@pausesubsections\pause\fi%
+      \beamer@tempcount=#6%
+      \advance\beamer@tempcount by\beamer@sectionadjust%
+      \edef\inserttocsectionnumber{\the\beamer@tempcount}%
+      \def\inserttocsubsectionnumber{#2}%
+      \def\inserttocsubsection{\hyperlink{Navigation#4}{#3}}%
+      \def\inserttocsubsectionframenumber{\hyperlink{Navigation#4}{#4}}%
+      \beamer@tocifnothide{\ifnum\c@section=#1\beamer@toc@css\else\beamer@toc@oss\fi}%
+      {%
+        \def\beamer@breakhere{\\}%
+        \beamer@tocact{\ifnum\c@section=#1\ifnum\c@subsection=#2\beamer@toc@css\else\beamer@toc@oss\fi\else\beamer@toc@ooss\fi}
+        {subsection in toc}%
+      }%
+    }}%
+    \beamer@restoreanother%
+  }%
+  \beamer@todo%
+  \fi\fi%
+}
+
+\defbeamertemplate*{subsection in toc}{lunde}{
+    \tikz{
+        \path
+        (0,-0.75em) +(-\secangle*\seclean:-\subsectionlabellength) coordinate (a)
+        (0,-0.75em) +(-\secangle*\seclean:\subsectionlabellength) coordinate (b)
+        (0,0.75em) +(-\secangle*\seclean:\subsectionlabellength) coordinate (c)
+        (0,0.75em) +(-\secangle*\seclean:-\subsectionlabellength) coordinate (d)
+        ;
+        \useasboundingbox (a) +(-0.5cm,0) rectangle (d -| b);
+        \fill[lu-baby] (a) -- (b) -- (c) -- (d) -- cycle;
+        \path ($(a)!.5!(d)$) -- ($(b)!.5!(c)$) node[black, pos=0, sloped, anchor=west] {\inserttocsubsection};
+    }\\
+}
